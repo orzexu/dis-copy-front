@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+
+@font-face {
+	font-family: 'Noto Sans Variable';
+	src: url('/assets/fonts/NotoSansVariable.ttf') format('truetype');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@theme {
+	--color-grayscale-10: #1e1e1e;
+	--color-grayscale-20: #2e2e2e;
+	--color-grayscale-30: #3e3e3e;
+	--color-grayscale-40: #4e4e4e;
+	--color-grayscale-50: #5e5e5e;
+	--color-grayscale-60: #6e6e6e;
+	--color-grayscale-70: #7e7e7e;
+	--color-grayscale-80: #8e8e8e;
+	--color-grayscale-90: #9e9e9e;
+	--color-grayscale-100: #aeaeae;
+
+	--color-skeleton: var(--color-grayscale-30);
+
+	--shadow-app-primary: 0 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+html {
+	background-color: #1e1e1e;
+	color: #e4e4e7;
+	font-size: 14px;
+	font-family: 'Noto Sans Variable', sans-serif;
+}
+
+button {
+	cursor: pointer;
+
+	&:disabled {
+		cursor: not-allowed;
+	}
+}
+
+* {
+	outline: 0;
+}
