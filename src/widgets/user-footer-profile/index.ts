@@ -1,0 +1,1 @@
+export { UserFooterProfile } from './user-footer-profile.tsx'

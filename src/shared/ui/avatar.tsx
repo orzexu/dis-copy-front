@@ -1,6 +1,6 @@
 import { cn } from "@shared/lib"
 
-type AvatarProps = {
+type Props = {
 	src?: string
 	alt?: string
 	fallback?: string
@@ -16,7 +16,7 @@ export const Avatar = ({
 	size = 'md',
 	className,
 	isOnline,
-}: AvatarProps) => {
+}: Props) => {
 	const sizeClasses = {
 		sm: 'w-8 h-8',
 		md: 'w-10 h-10',
@@ -56,8 +56,8 @@ export const Avatar = ({
       {isOnline !== undefined && (
         <div
           className={cn(
-            'absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white',
-            isOnline ? 'bg-green-500' : 'bg-gray-400'
+            'absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-grayscale-10',
+            isOnline ? 'bg-green-500' : 'bg-grayscale-50'
           )}
         />
       )}

@@ -1,1 +1,1 @@
-export { Chat } from './chat.tsx'
+export { ChatWidget } from './chat.tsx'

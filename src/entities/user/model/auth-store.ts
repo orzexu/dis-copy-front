@@ -2,6 +2,7 @@ import { logout } from '@shared/api'
 import { UserResponseDto } from './types'
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
+import { ROUTES } from '@app/config'
 
 type AuthState = {
 	//---data---
@@ -37,7 +38,8 @@ export const useAuthStore = create<AuthState>()(
 					console.error('Logout error:', e)
 				} finally {
 					set({ user: null, accessToken: null, isInitialized: true })
-					localStorage.removeItem('auth-storage')
+          useAuthStore.persist.clearStorage()
+          window.location.href = ROUTES.login
 				}
 			},
 			login: (user, accessToken) => {

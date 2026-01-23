@@ -5,3 +5,10 @@ export type UserResponseDto = {
   createdAt: string
   updatedAt: string
 }
+
+export type SearchUsersDto = {
+  id: number
+  username: string
+  createdAt: string
+  friendshipStatus: 'friend' | 'requested' | 'incoming' | 'none'
+}

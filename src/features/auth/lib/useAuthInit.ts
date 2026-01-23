@@ -1,65 +1,57 @@
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '@entities/user/model'
 import { getProfile } from '@shared/api'
+import { ROUTES } from '@app/config'
 
 export const useAuthInit = () => {
-  const [isLoading, setIsLoading] = useState(true)
-  const { setIsInitialized, login, logout, getIsInitialized, setAccessToken } = useAuthStore()
+	const [isLoading, setIsLoading] = useState(true)
+	const { setIsInitialized, login, logout, getIsInitialized, setAccessToken, getAccessToken } =
+		useAuthStore()
 
-  useEffect(() => {
-    const initAuth = async () => {
-      if (getIsInitialized()) {
-        setIsLoading(false)
-        return
-      }
+	useEffect(() => {
+		const initAuth = async () => {
+			if (getIsInitialized()) {
+				setIsLoading(false)
+				return
+			}
 
-      try {
-        const storedToken = localStorage.getItem('auth-storage')
-        let accessToken: string | null = null
-        
-        if (storedToken) {
-          try {
-            const parsed = JSON.parse(storedToken)
-            accessToken = parsed.state.accessToken
-            
-            if (accessToken) {
-              setAccessToken(accessToken)
-            }
-          } catch (error) {
-            console.error('Error parsing stored token:', error)
-            localStorage.removeItem('auth-storage')
-          }
-        }
+			if (
+				location.pathname === ROUTES.login ||
+				location.pathname === ROUTES.register
+			) {
+				setIsInitialized(true)
+				setIsLoading(false)
+				return
+			}
 
-        const userData = await getProfile()
-        
-        if (userData) {
-          const currentToken = useAuthStore.getState().getAccessToken()
-          
-          if (currentToken) {
-            login(userData, currentToken)
-          } else {
-            login(userData, accessToken || '')
-          }
+			try {
+				const accessToken = getAccessToken()
+
+				if (accessToken) {
+          const userData = await getProfile();
+          login(userData, accessToken);
         } else {
-          logout()
+          logout();
         }
-      } catch (error: any) {
-        console.error('Auth initialization error:', error)
-        
-        if (error.response?.status === 401 || error.message === 'Unauthorized') {
-          logout()
-        } else {
-          logout()
-        }
-      } finally {
-        setIsInitialized(true)
-        setIsLoading(false)
-      }
-    }
+			} catch (error: any) {
+				console.error('Auth initialization error:', error)
 
-    initAuth()
-  }, [getIsInitialized, setIsInitialized, login, logout, setAccessToken])
+				if (
+					error.response?.status === 401 ||
+					error.message === 'Unauthorized'
+				) {
+					logout()
+				} else {
+					logout()
+				}
+			} finally {
+				setIsInitialized(true)
+				setIsLoading(false)
+			}
+		}
 
-  return { isLoading }
+		initAuth()
+	}, [getIsInitialized, setIsInitialized, login, logout, setAccessToken, location.pathname])
+
+	return { isLoading }
 }

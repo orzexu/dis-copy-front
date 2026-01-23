@@ -68,7 +68,8 @@ apiClient.interceptors.response.use(
         
         return apiClient(originalRequest)
       } catch (refreshError: any) {
-        if (refreshError.response?.status === 401) {
+        console.log('Refresh error:', refreshError.response?.data)
+        if (refreshError.response?.data?.statusCode === 401) {
           useAuthStore.getState().logout()
         }
         

@@ -25,6 +25,26 @@
 	--shadow-app-primary: 0 0 1px 1px rgba(0, 0, 0, 0.3);
 }
 
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-grayscale-30);
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-grayscale-40);
+}
+
 html {
 	background-color: #1e1e1e;
 	color: #e4e4e7;

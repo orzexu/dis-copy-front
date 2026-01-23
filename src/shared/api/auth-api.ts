@@ -1,5 +1,6 @@
 import { LoginFormData, RegisterFormData } from '@features/auth/schemas'
 import { apiClient } from '@shared/api/axios-instance'
+import { refreshClient } from '@shared/api/refresh-client'
 
 export const login = async (data: LoginFormData) => {
 	return apiClient.post('/auth/login', data)
@@ -10,7 +11,7 @@ export const register = async (data: RegisterFormData) => {
 }
 
 export const refreshAccessToken = async () => {
-	return apiClient.post('/auth/refresh')
+	return refreshClient.post('/auth/refresh')
 }
 
 export const logout = async () => {

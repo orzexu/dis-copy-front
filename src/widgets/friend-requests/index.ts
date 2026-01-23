@@ -1,0 +1,1 @@
+export { FriendRequestsList } from './friend-requests-list.tsx'

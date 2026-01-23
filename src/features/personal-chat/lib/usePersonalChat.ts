@@ -1,47 +1,86 @@
+import { useChatStore } from '@features/personal-chat/model'
 import { TMessage } from '@entities/message/model'
 import { useAuthStore } from '@entities/user/model'
-import { personalChatService } from '@shared/api'
-import { useCallback, useEffect, useState } from 'react'
+import { personalChatService } from '@shared/api/personal-chat-socket'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 type UsePersonalChatProps = {
 	friendId: number
 }
 
 export const usePersonalChat = ({ friendId }: UsePersonalChatProps) => {
-	const [messages, setMessages] = useState<TMessage[]>([])
-	const [isFriendOnline, setIsFriendOnline] = useState<boolean>(false)
-	const [isConnected, setIsConnected] = useState<boolean>(false)
 	const [input, setInput] = useState('')
+	const [isConnected, setIsConnected] = useState(false)
+	const [historyLoaded, setHistoryLoaded] = useState(false)
 
 	const currentUser = useAuthStore(state => state.user)
+	const currentUserId = currentUser?.id
 
-	const connect = useCallback(async () => {
-		try {
-			await personalChatService.connect()
-			setIsConnected(true)
+	const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-			personalChatService.onMessage(message => {
-				if (message.senderId === friendId || message.receiverId === friendId) {
-					setMessages(prev => [...prev, message])
+	const {
+		onlineUsers,
+		typingUsers,
+		unreadCounts,
+		setMessages,
+		getMessagesWithFriend,
+		resetUnread,
+	} = useChatStore()
+
+	const chatMessages = getMessagesWithFriend(friendId)
+	const isFriendOnline = onlineUsers.has(friendId)
+	const isFriendTyping = typingUsers[friendId] || false
+	const unreadCount = unreadCounts[friendId] || 0
+
+  useEffect(() => {
+		const container = document.querySelector('.chat-messages')
+		if (container) {
+			container.scrollTop = container.scrollHeight
+
+			if (chatMessages.length > 0) {
+				const hasUnreadFromFriend = chatMessages.some(
+					msg => msg.senderId === friendId && !msg.isRead,
+				)
+
+				if (hasUnreadFromFriend) {
+					personalChatService.markAsRead(friendId)
+					resetUnread(friendId)
 				}
-			})
-
-			personalChatService.onFriendOnline(userId => {
-				if (userId === friendId) {
-					setIsFriendOnline(true)
-				}
-			})
-
-			personalChatService.onFriendOffline(userId => {
-				if (userId === friendId) {
-					setIsFriendOnline(false)
-				}
-			})
-
-			personalChatService.getHistoryWhithFriend(friendId)
-		} catch (error) {
-			console.error('can not connect to personal chat', error)
+			}
 		}
+	}, [chatMessages, friendId])
+
+	// Подключаемся только для загрузки истории
+	useEffect(() => {
+		const loadHistory = async () => {
+			if (!personalChatService.isConnected()) {
+				try {
+					await personalChatService.connect()
+					setIsConnected(true)
+				} catch (error) {
+					console.error('Failed to connect for history:', error)
+					return
+				}
+			} else {
+				setIsConnected(true)
+			}
+
+			// Загружаем историю
+			personalChatService.getHistoryWithFriend(friendId)
+			const handleChatHistory = (data: { messages: TMessage[] }) => {
+				setMessages(friendId, data.messages)
+				setHistoryLoaded(true)
+				personalChatService.markAsRead(friendId)
+				resetUnread(friendId)
+			}
+			personalChatService.onChatHistory(handleChatHistory)
+
+			return () => {
+				personalChatService.offChatHistory(handleChatHistory)
+			}
+		}
+
+		loadHistory()
 	}, [friendId])
 
 	const sendMessage = useCallback(() => {
@@ -49,6 +88,13 @@ export const usePersonalChat = ({ friendId }: UsePersonalChatProps) => {
 
 		personalChatService.sendMessageToFriend(friendId, input)
 		setInput('')
+
+		// Сбрасываем статус набора
+		if (typingTimeoutRef.current) {
+			clearTimeout(typingTimeoutRef.current)
+			typingTimeoutRef.current = null
+		}
+		personalChatService.sendTypingStatus(friendId, false)
 	}, [input, isConnected, friendId])
 
 	const handleKeyPress = useCallback(
@@ -58,33 +104,52 @@ export const usePersonalChat = ({ friendId }: UsePersonalChatProps) => {
 				sendMessage()
 			}
 		},
-		[sendMessage]
+		[sendMessage],
 	)
 
-	useEffect(() => {
-		connect()
+	const handleInputChange = (value: string) => {
+		setInput(value)
 
-		return () => {
-			personalChatService.disconnect()
+		if (!isConnected || !friendId || !currentUserId) return
+
+		const isTyping = value.trim().length > 0
+
+		if (isTyping) {
+			personalChatService.sendTypingStatus(friendId, true)
+
+			if (typingTimeoutRef.current) {
+				clearTimeout(typingTimeoutRef.current)
+			}
+
+			typingTimeoutRef.current = setTimeout(() => {
+				personalChatService.sendTypingStatus(friendId, false)
+				typingTimeoutRef.current = null
+			}, 1000)
+		} else {
+			if (typingTimeoutRef.current) {
+				clearTimeout(typingTimeoutRef.current)
+				typingTimeoutRef.current = null
+			}
+			personalChatService.sendTypingStatus(friendId, false)
 		}
-	}, [connect])
-
-	const chatMessages = messages.filter(
-		msg =>
-			(msg.senderId === friendId && msg.receiverId === currentUser?.id) ||
-			(msg.senderId === currentUser?.id && msg.receiverId === friendId)
-	)
+	}
 
 	return {
+		// State
 		messages: chatMessages,
 		isFriendOnline,
+		isFriendTyping,
 		isConnected,
+		historyLoaded,
 		input,
+		unreadCount,
 
-		setInput,
+		// Actions
+		setInput: handleInputChange,
 		sendMessage,
 		handleKeyPress,
 
-		isOwnMessage: (message: TMessage) => message.senderId === currentUser?.id,
+		// Utils
+		isOwnMessage: (message: TMessage) => message.senderId === currentUserId,
 	}
 }

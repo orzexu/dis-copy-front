@@ -1,2 +1,2 @@
-export type { UserResponseDto } from './types'
+export type { UserResponseDto, SearchUsersDto } from './types'
 export { useAuthStore } from './auth-store'
