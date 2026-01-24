@@ -1,6 +1,9 @@
 import { TFriend, useFriendsStore } from '@entities/friend/model'
+import { useChatStore } from '@features/personal-chat/model'
 import { TrashIcon } from '@heroicons/react/16/solid'
 import { useUiStore } from '@shared/model/ui-store'
+import { Avatar } from '@shared/ui'
+import { UnreadCount } from '@shared/ui/unread-count'
 import React from 'react'
 
 type Props = {
@@ -11,30 +14,41 @@ type Props = {
 
 export const FriendsListCard = React.memo(
 	({ friend, onMessageClick, onRemoveClick }: Props) => {
-    const setSelectedFriendId = useFriendsStore(state => state.setSelectedFriendId)
-    const setMainPanel = useUiStore(state => state.setMainPanel)
+		const setSelectedFriendId = useFriendsStore(
+			state => state.setSelectedFriendId,
+		)
+		const setMainPanel = useUiStore(state => state.setMainPanel)
+		const onlineUsers = useChatStore(state => state.onlineUsers)
+		const isFriendOnline = onlineUsers.has(friend.id)
+    const unreadCount = useChatStore(state => state.unreadCounts[friend.id] || 0)
 
 		return (
 			<div
 				onClick={() => {
-          onMessageClick(friend.id)
-          setSelectedFriendId(friend.id)
-          setMainPanel('pesonalChat')
-        }}
+					onMessageClick(friend.id)
+					setSelectedFriendId(friend.id)
+					setMainPanel('pesonalChat')
+				}}
 				className="flex justify-between items-center px-2 py-4 rounded-md hover:bg-zinc-800 cursor-pointer"
 			>
-				<div>
-					<p className="text-zinc-300">{friend.username}</p>
+				<div className="flex items-center gap-2">
+					<Avatar fallback={friend.username} isOnline={isFriendOnline} />
+					<div>
+						<p className="text-zinc-300">{friend.username}</p>
+					</div>
 				</div>
-				<button
-					onClick={e => {
-						e.stopPropagation()
-						onRemoveClick(friend.id)
-					}}
-				>
-					<TrashIcon className="w-5 h-5 text-red-400 duration-200 hover:scale-115" />
-				</button>
+				<div className='flex items-center gap-2'>
+          <UnreadCount count={unreadCount} />
+					<button
+						onClick={e => {
+							e.stopPropagation()
+							onRemoveClick(friend.id)
+						}}
+					>
+						<TrashIcon className="w-5 h-5 text-red-400 duration-200 hover:scale-115" />
+					</button>
+				</div>
 			</div>
 		)
-	}
+	},
 )

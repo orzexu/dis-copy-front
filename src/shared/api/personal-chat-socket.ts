@@ -45,27 +45,20 @@ class PesonalChatService {
 			})
 
 			this.socket.on('newMessage', (message: TMessage) => {
-				console.log('new message', message)
 				if (this.onMessageCallback) {
 					this.onMessageCallback(message)
 				}
 			})
 			this.socket.on('userOnline', (data: { userId: number }) => {
-				console.log(`friend ${data.userId} online`)
 				if (this.onFriendOnlineCallback) {
 					this.onFriendOnlineCallback(data.userId)
 				}
 			})
 
 			this.socket.on('userOffline', (data: { userId: number }) => {
-				console.log(`friend ${data.userId} offline`)
 				if (this.onFriendOfflineCallback) {
 					this.onFriendOfflineCallback(data.userId)
 				}
-			})
-
-			this.socket.on('chatHistory', (data: { messages: TMessage[] }) => {
-				console.log('История чата:', data.messages.length, 'сообщений')
 			})
 
 			this.socket.on('tokenExpired', () => {
