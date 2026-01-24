@@ -37,9 +37,8 @@ export const useAuthStore = create<AuthState>()(
 				} catch (e) {
 					console.error('Logout error:', e)
 				} finally {
-					set({ user: null, accessToken: null, isInitialized: true })
+					set({ user: null, accessToken: null, isInitialized: false })
           useAuthStore.persist.clearStorage()
-          window.location.href = ROUTES.login
 				}
 			},
 			login: (user, accessToken) => {
