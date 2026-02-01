@@ -1,4 +1,5 @@
-import { cn } from "@shared/lib"
+import { cn } from '@shared/lib'
+import { useEffect, useState } from 'react'
 
 type Props = {
 	src?: string
@@ -17,6 +18,14 @@ export const Avatar = ({
 	className,
 	isOnline,
 }: Props) => {
+	const [imageError, setImageError] = useState(false)
+
+	useEffect(() => {
+		if (src) {
+			setImageError(false)
+		}
+	}, [src])
+
 	const sizeClasses = {
 		sm: 'w-8 h-8',
 		md: 'w-10 h-10',
@@ -31,36 +40,39 @@ export const Avatar = ({
 		xl: 'text-lg',
 	}
 
+	const showFallback = !src || imageError
+
 	return (
 		<div className="relative inline-block">
-      <div
-        className={cn(
-          'relative flex items-center justify-center rounded-full bg-linear-to-br from-blue-500 to-purple-600 text-white overflow-hidden',
-          sizeClasses[size],
-          className
-        )}
-      >
-        {src ? (
-          <img
-            src={src}
-            alt={alt}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <span className={cn('font-semibold', textSizes[size])}>
-            {fallback?.charAt(0).toUpperCase() || 'U'}
-          </span>
-        )}
-      </div>
-      
-      {isOnline !== undefined && (
-        <div
-          className={cn(
-            'absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-grayscale-10',
-            isOnline ? 'bg-green-500' : 'bg-grayscale-50'
-          )}
-        />
-      )}
-    </div>
+			<div
+				className={cn(
+					'relative flex items-center justify-center rounded-full bg-linear-to-br from-blue-500 to-purple-600 text-white overflow-hidden',
+					sizeClasses[size],
+					className,
+				)}
+			>
+				{showFallback ? (
+					<span className={cn('font-semibold', textSizes[size])}>
+						{fallback?.charAt(0).toUpperCase() || 'U'}
+					</span>
+				) : (
+					<img
+						src={src}
+						alt={alt}
+						className="w-full h-full object-cover"
+						onError={() => setImageError(true)}
+					/>
+				)}
+			</div>
+
+			{isOnline !== undefined && (
+				<div
+					className={cn(
+						'absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-grayscale-10',
+						isOnline ? 'bg-green-500' : 'bg-grayscale-50',
+					)}
+				/>
+			)}
+		</div>
 	)
 }
