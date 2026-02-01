@@ -2,7 +2,6 @@ import { logout } from '@shared/api'
 import { UserResponseDto } from './types'
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { ROUTES } from '@app/config'
 
 type AuthState = {
 	//---data---

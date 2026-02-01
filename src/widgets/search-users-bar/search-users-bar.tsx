@@ -47,7 +47,7 @@ export const SearchUsersBar = () => {
 				</div>
 			)}
 			{!isLoading && searchUsers !== undefined && searchUsers?.length > 0 && (
-				<div className="absolute top-10 left-0.5 w-full max-h-11/12 h-max flex flex-col bg-zinc-800 shadow-app-primary rounded-md p-2 overflow-y-auto">
+				<div className="absolute z-10 top-10 left-0.5 w-full max-h-11/12 h-max flex flex-col bg-zinc-800 shadow-app-primary rounded-md p-2 overflow-y-auto">
 					{searchUsers?.map(user => (
 							<SearchUsersCard
 								key={user.id}

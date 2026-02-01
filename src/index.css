@@ -47,7 +47,7 @@
 
 html {
 	background-color: #1e1e1e;
-	color: #e4e4e7;
+	color: var(--color-grayscale-100);
 	font-size: 14px;
 	font-family: 'Noto Sans Variable', sans-serif;
 }

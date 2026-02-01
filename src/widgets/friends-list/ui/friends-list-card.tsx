@@ -2,8 +2,7 @@ import { TFriend, useFriendsStore } from '@entities/friend/model'
 import { useChatStore } from '@features/personal-chat/model'
 import { TrashIcon } from '@heroicons/react/16/solid'
 import { useUiStore } from '@shared/model/ui-store'
-import { Avatar } from '@shared/ui'
-import { UnreadCount } from '@shared/ui/unread-count'
+import { Avatar, UnreadCount } from '@shared/ui'
 import React from 'react'
 
 type Props = {
@@ -20,7 +19,9 @@ export const FriendsListCard = React.memo(
 		const setMainPanel = useUiStore(state => state.setMainPanel)
 		const onlineUsers = useChatStore(state => state.onlineUsers)
 		const isFriendOnline = onlineUsers.has(friend.id)
-    const unreadCount = useChatStore(state => state.unreadCounts[friend.id] || 0)
+		const unreadCount = useChatStore(
+			state => state.unreadCounts[friend.id] || 0,
+		)
 
 		return (
 			<div
@@ -29,16 +30,21 @@ export const FriendsListCard = React.memo(
 					setSelectedFriendId(friend.id)
 					setMainPanel('pesonalChat')
 				}}
-				className="flex justify-between items-center px-2 py-4 rounded-md hover:bg-zinc-800 cursor-pointer"
+				className="flex justify-between items-center px-2 py-1 rounded-md hover:bg-zinc-800 cursor-pointer"
 			>
 				<div className="flex items-center gap-2">
-					<Avatar fallback={friend.username} isOnline={isFriendOnline} />
+					<Avatar
+						src={friend.avatarUrl}
+						fallback={friend.username}
+						isOnline={isFriendOnline}
+            size='lg'
+					/>
 					<div>
-						<p className="text-zinc-300">{friend.username}</p>
+						<p className="text-zinc-300 text-lg">{friend.username}</p>
 					</div>
 				</div>
-				<div className='flex items-center gap-2'>
-          <UnreadCount count={unreadCount} />
+				<div className="flex items-center gap-2">
+					<UnreadCount count={unreadCount} />
 					<button
 						onClick={e => {
 							e.stopPropagation()

@@ -15,8 +15,13 @@ export const ChatHeader = ({
 	isFriendTyping,
 }: Props) => {
 	return (
-		<div className="p-3 border-b border-zinc-700 flex items-center gap-2">
-			<Avatar fallback={friend?.username} isOnline={isFriendOnline} />
+		<div className="p-2 border-b border-zinc-700 flex items-center gap-2">
+			<Avatar
+				src={friend?.avatarUrl}
+				fallback={friend?.username}
+				isOnline={isFriendOnline}
+        size='lg'
+			/>
 			<div>
 				<h2 className="text-zinc-200 font-medium">{friend?.username}</h2>
 				<p className="text-xs text-zinc-400">

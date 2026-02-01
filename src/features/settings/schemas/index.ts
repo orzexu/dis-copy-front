@@ -1,0 +1,1 @@
+export { personalDataSchema, type PersonalDataFormData } from './personalDataSchema'
