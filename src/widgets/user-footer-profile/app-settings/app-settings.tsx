@@ -1,8 +1,10 @@
+import { useAuthStore } from '@entities/user/model'
 import { useGetProfile } from '@features/user'
-import { UserIcon, XMarkIcon } from '@heroicons/react/16/solid'
+import { LockClosedIcon, UserIcon, XMarkIcon } from '@heroicons/react/16/solid'
 import { cn } from '@shared/lib'
-import { Avatar, Divider } from '@shared/ui'
+import { AppButton, Avatar, Divider } from '@shared/ui'
 import { PersonalData } from '@widgets/user-footer-profile/app-settings/settings-components/personal-data'
+import { SecuritySettings } from '@widgets/user-footer-profile/app-settings/settings-components/security-settings'
 import { useState } from 'react'
 
 type Props = {
@@ -12,20 +14,33 @@ type Props = {
 export const AppSettings = ({ close }: Props) => {
 	const { data: user } = useGetProfile()
 	const [activeTab, setActivetab] = useState(0)
+	const { logout } = useAuthStore()
 
 	const settingList = [
 		{
 			title: 'Личные данные',
 			icon: <UserIcon className="w-8 h-8" />,
 		},
+		{
+			title: 'Безопасность',
+			icon: <LockClosedIcon className="w-8 h-8" />,
+		},
 	]
 
 	return (
 		<div className="flex h-full">
 			<div className="w-full max-w-1/3 p-1">
-				<div className="flex items-center gap-2 mb-2">
-					<Avatar src={user?.avatarUrl} fallback={user?.username} size="lg" />
-					<div className="text-zinc-300 text-lg">{user?.username}</div>
+				<div className="flex items-center justify-between mb-2">
+					<div className="flex items-center gap-2">
+						<Avatar src={user?.avatarUrl} fallback={user?.username} size="lg" />
+						<div className="text-zinc-300 text-lg">{user?.username}</div>
+					</div>
+					<AppButton
+						text="Выйти"
+						style="exit"
+						onClick={logout}
+						className="py-1 px-2 w-max"
+					/>
 				</div>
 				{settingList.map((item, index) => (
 					<button
@@ -57,6 +72,7 @@ export const AppSettings = ({ close }: Props) => {
 				<Divider />
 				<div className="flex-1 pl-1 pr-1 pb-1">
 					{activeTab === 0 && <PersonalData />}
+					{activeTab === 1 && <SecuritySettings />}
 				</div>
 			</div>
 		</div>

@@ -46,7 +46,7 @@
 }
 
 html {
-	background-color: #1e1e1e;
+	background-color: var(--color-grayscale-10);
 	color: var(--color-grayscale-100);
 	font-size: 14px;
 	font-family: 'Noto Sans Variable', sans-serif;

@@ -5,7 +5,7 @@ import { AppSettings } from '@widgets/user-footer-profile/app-settings/app-setti
 
 export const UserFooterProfile = () => {
 	const { data: profile, isLoading } = useGetProfile()
-	const { open, close, isOpen } = useModal()
+	const { open, close, isOpen } = useModal('profile-settings')
 
 	return (
 		<div className="min-h-12 border rounded-md border-zinc-700">

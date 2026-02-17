@@ -1,11 +1,14 @@
-import { useState } from 'react'
+import { useUiStore } from '@shared/model/ui-store'
 
-export const useModal = (initialState: boolean = false) => {
-	const [isOpen, setIsOpen] = useState(initialState)
+export const useModal = (id: string) => {
+	const { openModal, closeModal, modals, toggleModal } = useUiStore()
 
-	const open = () => setIsOpen(true)
-	const close = () => setIsOpen(false)
-	const toggle = () => setIsOpen(prev => !prev)
+	const isOpen = Boolean(modals[id])
 
-	return { isOpen, open, close, toggle }
+	return {
+		isOpen,
+		open: () => openModal(id),
+		close: () => closeModal(id),
+		toggle: () => toggleModal(id),
+	}
 }

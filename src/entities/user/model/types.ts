@@ -14,3 +14,12 @@ export type SearchUsersDto = {
   createdAt: string
   friendshipStatus: 'friend' | 'requested' | 'incoming' | 'none'
 }
+
+export type TUser = {
+  id: number
+  email: string
+  username: string
+  avatarUrl?: string
+  createdAt: string
+  updatedAt: string
+}

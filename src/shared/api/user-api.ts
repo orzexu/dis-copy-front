@@ -1,5 +1,7 @@
 import { SearchUsersDto, UserResponseDto } from '@entities/user/model'
-import { PersonalDataFormData } from '@features/settings/schemas'
+import {
+	PersonalDataFormData,
+} from '@features/settings/schemas'
 import { apiClient } from '@shared/api/axios-instance'
 
 export const getProfile = async (): Promise<UserResponseDto> => {
@@ -12,12 +14,20 @@ export const searchUsers = async (query: string): Promise<SearchUsersDto[]> => {
 		'/users/search',
 		{
 			params: { q: query },
-		}
+		},
 	)
 	return response.data.data
 }
 
 export const updateProfile = async (data: PersonalDataFormData) => {
-  const response = await apiClient.patch('/users/profile', data)
-  return response.data.data
+	const response = await apiClient.patch('/users/profile', data)
+	return response.data.data
+}
+
+export const changePassword = async (data: {
+	oldPass: string
+	newPass: string
+}) => {
+	const response = await apiClient.patch('/users/password', data)
+	return response.data.data
 }

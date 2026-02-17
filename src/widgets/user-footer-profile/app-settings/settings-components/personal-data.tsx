@@ -11,24 +11,24 @@ import { useForm } from 'react-hook-form'
 
 export const PersonalData = () => {
 	const { data: user } = useGetProfile()
-  const { mutate: updateProfile } = useUpdateProfile()
+	const { mutate: updateProfile } = useUpdateProfile()
 
 	const onSubmit = (data: PersonalDataFormData) => {
-    updateProfile(data, {
-      onSuccess: (updatedUser: UserResponseDto) => {
-        reset({
-          avatarUrl: '',
-          email: updatedUser.email,
-          username: updatedUser.username,
-        })
-      }
-    })
+		updateProfile(data, {
+			onSuccess: (updatedUser: UserResponseDto) => {
+				reset({
+					avatarUrl: '',
+					email: updatedUser.email,
+					username: updatedUser.username,
+				})
+			},
+		})
 	}
 
 	const {
 		handleSubmit,
 		register,
-    reset,
+		reset,
 		formState: { errors, isValid, isDirty },
 	} = useForm<PersonalDataFormData>({
 		defaultValues: {

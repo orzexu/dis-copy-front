@@ -9,7 +9,12 @@ export {
 	removeFriend,
 	declineFriendRequest,
 	getFriendRequests,
-	type TFriend,
 } from './friends-api'
 export { QUERY_KEYS } from './query-keys'
 export { refreshClient } from './refresh-client'
+export {
+	createServer,
+	generateServerInvite,
+	joinServerByInvite,
+	getUserServers,
+} from './server-api'
