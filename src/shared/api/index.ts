@@ -2,6 +2,7 @@ export { login, register, logout, refreshAccessToken } from './auth-api'
 export { apiClient } from './axios-instance'
 export { getProfile } from './user-api'
 export { personalChatService } from './personal-chat-socket'
+export { serverChatService } from './server-chat-socket'
 export {
 	getFriends,
 	sendFriendRequest,

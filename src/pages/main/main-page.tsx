@@ -87,7 +87,7 @@ export const MainPage = () => {
 			</div>
 
 			{/* MAIN PANEL */}
-			<div className="p-1 flex-1">
+			<div className="flex-1 pl-1">
 				{showFriendRequests ? (
 					<FriendRequestsList />
 				) : showChat ? (

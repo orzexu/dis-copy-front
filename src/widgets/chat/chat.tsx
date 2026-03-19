@@ -25,6 +25,7 @@ export const ChatWidget = () => {
 		historyLoaded,
 		isFriendOnline,
 		isFriendTyping,
+		isOwnMessage,
 	} = usePersonalChat({ friendId })
 
 	const friend = useFriendsStore(state =>
@@ -43,9 +44,9 @@ export const ChatWidget = () => {
 			{/* Messages */}
 			<div className="flex-1 overflow-y-auto p-3 chat-messages">
 				<ChatMessages
-					friendId={friendId}
 					historyLoaded={historyLoaded}
 					messages={messages}
+					isOwnMessage={isOwnMessage}
 				/>
 			</div>
 

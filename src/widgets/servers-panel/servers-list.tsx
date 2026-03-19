@@ -16,11 +16,14 @@ export const ServersList = () => {
 	const setSelectedServerId = useUiStore(state => state.setSelectedServerId)
 	const setSelectedChannelId = useUiStore(state => state.setSelectedChannelId)
 	const setMiddlePanel = useUiStore(state => state.setMiddlePanel)
+  const setMainPanel = useUiStore(state => state.setMainPanel)
+  const selectedServerId = useUiStore(state => state.selectedServerId)
 
 	const handleClickOnServer = useCallback(
 		(serverId: number) => {
 			setSelectedServerId(serverId)
 			setMiddlePanel('channels')
+      setMainPanel(null)
 		},
 		[setSelectedServerId, setMiddlePanel],
 	)
@@ -29,6 +32,7 @@ export const ServersList = () => {
 		setSelectedServerId(null)
 		setSelectedChannelId(null)
 		setMiddlePanel('friends')
+    setMainPanel(null)
 	}
 
 	return (
@@ -54,6 +58,7 @@ export const ServersList = () => {
 								hoverText={server.name}
 								serverLogoLink={server.iconUrl}
 								onClick={() => handleClickOnServer(server.id)}
+                isActive={server.id === selectedServerId}
 							/>
 						</div>
 					))}

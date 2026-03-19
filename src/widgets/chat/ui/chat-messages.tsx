@@ -3,12 +3,16 @@ import { CheckIcon } from '@heroicons/react/16/solid'
 import { cn } from '@shared/lib'
 
 type Props = {
-	friendId: number
 	historyLoaded: boolean
 	messages: TMessage[]
+	isOwnMessage: (message: TMessage) => boolean
 }
 
-export const ChatMessages = ({ friendId, historyLoaded, messages }: Props) => {
+export const ChatMessages = ({
+	historyLoaded,
+	messages,
+	isOwnMessage,
+}: Props) => {
 	return (
 		<>
 			{!historyLoaded ? (
@@ -26,15 +30,15 @@ export const ChatMessages = ({ friendId, historyLoaded, messages }: Props) => {
 							key={msg.id || index}
 							className={cn(
 								'max-w-max p-2 rounded-lg flex gap-1 relative',
-								msg.senderId === friendId
-									? 'bg-zinc-700 mr-auto'
-									: 'bg-zinc-800 ml-auto',
+								isOwnMessage(msg)
+									? 'bg-zinc-700 ml-auto'
+									: 'bg-zinc-800 mr-auto',
 							)}
 						>
 							<p
 								className={cn(
 									'text-white text-sm',
-									msg.senderId === friendId ? 'pr-8' : 'pr-14',
+									isOwnMessage(msg) ? 'pr-14' : 'pr-8',
 								)}
 							>
 								{msg.content}
@@ -42,7 +46,7 @@ export const ChatMessages = ({ friendId, historyLoaded, messages }: Props) => {
 							<p
 								className={cn(
 									'text-xs text-zinc-400 mt-1 w-max absolute bottom-1',
-									msg.senderId === friendId ? 'right-1' : 'right-6',
+									isOwnMessage(msg) ? 'right-6' : 'right-1',
 								)}
 							>
 								{new Date(msg.createdAt).toLocaleTimeString([], {
@@ -53,7 +57,7 @@ export const ChatMessages = ({ friendId, historyLoaded, messages }: Props) => {
 							<CheckIcon
 								className={cn(
 									'w-4 h-4 absolute right-1 bottom-1',
-									msg.senderId === friendId ? 'hidden' : 'block',
+									isOwnMessage(msg) ? 'block' : 'hidden',
 									msg.isRead ? 'text-green-400' : 'text-gray-400',
 								)}
 							/>

@@ -7,10 +7,11 @@ type Props = {
 	style: 'create-server' | 'server-list' | 'home'
 	serverLogoLink?: string
 	onClick?: () => void
+	isActive?: boolean
 }
 
 export const ServerButton = React.memo(
-	({ hoverText, style, serverLogoLink, onClick }: Props) => {
+	({ hoverText, style, serverLogoLink, onClick, isActive }: Props) => {
 		return (
 			<div className="group relative">
 				<button
@@ -29,7 +30,10 @@ export const ServerButton = React.memo(
 								<img
 									src={serverLogoLink}
 									alt="server-logo"
-									className="w-full h-full object-cover rounded-3xl group-hover:rounded-2xl transition-all duration-200"
+									className={cn(
+										'w-full h-full object-cover rounded-3xl group-hover:rounded-2xl transition-all duration-200',
+                    isActive && 'rounded-2xl border-2 border-cyan-400',
+									)}
 								/>
 							) : (
 								<ServerIcon className="w-6 h-6 text-gray-300" />

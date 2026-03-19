@@ -5,7 +5,7 @@ import { io, Socket } from 'socket.io-client'
 
 class PesonalChatService {
 	private socket: Socket | null = null
-	private baseUrl = import.meta.env.VITE_SOCKET_BASE_URL
+	private baseUrl = import.meta.env.VITE_SOCKET_PERSONAL_CHAT_URL
 
 	private onMessageCallback: ((message: TMessage) => void) | null = null
 	private onFriendOnlineCallback: ((userId: number) => void) | null = null

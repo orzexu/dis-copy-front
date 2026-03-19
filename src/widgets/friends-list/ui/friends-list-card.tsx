@@ -1,6 +1,7 @@
 import { TFriend, useFriendsStore } from '@entities/friend/model'
 import { useChatStore } from '@features/personal-chat/model'
 import { TrashIcon } from '@heroicons/react/16/solid'
+import { cn } from '@shared/lib'
 import { useUiStore } from '@shared/model/ui-store'
 import { Avatar, UnreadCount } from '@shared/ui'
 import React from 'react'
@@ -9,10 +10,11 @@ type Props = {
 	friend: TFriend
 	onMessageClick: (id: number) => void
 	onRemoveClick: (id: number) => void
+	isActive?: boolean
 }
 
 export const FriendsListCard = React.memo(
-	({ friend, onMessageClick, onRemoveClick }: Props) => {
+	({ friend, onMessageClick, onRemoveClick, isActive }: Props) => {
 		const setSelectedFriendId = useFriendsStore(
 			state => state.setSelectedFriendId,
 		)
@@ -30,14 +32,17 @@ export const FriendsListCard = React.memo(
 					setSelectedFriendId(friend.id)
 					setMainPanel('pesonalChat')
 				}}
-				className="flex justify-between items-center px-2 py-1 rounded-md hover:bg-zinc-800 cursor-pointer"
+				className={cn(
+					'flex justify-between items-center px-2 py-1 rounded-md hover:bg-zinc-700 cursor-pointer',
+					isActive && 'bg-zinc-700/50',
+				)}
 			>
 				<div className="flex items-center gap-2">
 					<Avatar
 						src={friend.avatarUrl}
 						fallback={friend.username}
 						isOnline={isFriendOnline}
-            size='lg'
+						size="lg"
 					/>
 					<div>
 						<p className="text-zinc-300 text-lg">{friend.username}</p>

@@ -8,6 +8,7 @@ import { useCallback } from 'react'
 export const FriendsList = () => {
 	const { isLoading, data: friends, isError } = useGetFriends()
 	const setSelectedUserId = useUiStore(state => state.setSelectedUserId)
+  const selectedUserId = useUiStore(state => state.selectedUserId)
 
 	const { mutate: removeFriend } = useRemoveFriend()
 
@@ -41,6 +42,7 @@ export const FriendsList = () => {
 						friend={friend}
 						onMessageClick={handleSelectFriend}
 						onRemoveClick={handleRemoveFriend}
+            isActive={friend.id === selectedUserId}
 					/>
 				))}
 			</div>

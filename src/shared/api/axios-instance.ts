@@ -70,7 +70,7 @@ apiClient.interceptors.response.use(
       } catch (refreshError: any) {
         console.log('Refresh error:', refreshError.response?.data)
         processQueue(refreshError, null)
-        return Promise.reject(refreshError)
+        Promise.reject(refreshError)
       } finally {
         isRefreshing = false
       }

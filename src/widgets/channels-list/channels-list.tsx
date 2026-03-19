@@ -11,6 +11,7 @@ type Props = {
 export const ChannelsList = ({ server }: Props) => {
 	const setSelectedChannelId = useUiStore(state => state.setSelectedChannelId)
 	const setMainPanel = useUiStore(state => state.setMainPanel)
+  const selectedChannelId = useUiStore(state => state.selectedChannelId)
 
 	const handleClickOnChannel = (
 		channelId: number,
@@ -30,6 +31,7 @@ export const ChannelsList = ({ server }: Props) => {
 					className={cn(
 						'p-2 rounded cursor-pointer flex items-center gap-2',
 						'hover:bg-zinc-700 transition-colors',
+            selectedChannelId === channel.id && 'bg-zinc-700/50'
 					)}
 					onClick={() => handleClickOnChannel(channel.id, channel.type)}
 				>
