@@ -4,4 +4,5 @@ export const QUERY_KEYS = {
   profile: ['profile'] as const,
   searchUsers: ['searchUsers'] as const,
   userServers: ['userServers'] as const,
+  serverMembers: ['serverMembers'] as const
 } as const

@@ -3,6 +3,7 @@ import { cn } from '@shared/lib'
 import { useChannelChat } from '@features/channel-chat/lib'
 import { Avatar, ChatInput, LoadingSpinner } from '@shared/ui'
 import { useUserServers } from '@features/servers-bar/lib'
+import { useUsersStore } from '@entities/user/model'
 
 export const ChannelTextChat = () => {
 	const { data: server } = useUserServers()
@@ -12,6 +13,7 @@ export const ChannelTextChat = () => {
 	const selectedChannel = selectedServer?.channels.find(
 		c => c.id === selectedChannelId,
 	)
+	const { getUserById } = useUsersStore()
 
 	if (!selectedChannelId) {
 		return (
@@ -56,47 +58,52 @@ export const ChannelTextChat = () => {
 						No messages yet. Be the first to say hi!
 					</div>
 				) : (
-					messages.map(msg => (
-						<div
-							key={msg.id}
-							className={cn(
-								'flex gap-3 group',
-								isOwnMessage(msg) ? 'flex-row-reverse' : 'flex-row',
-							)}
-						>
-							{/* Avatar Placeholder */}
+					messages.map(msg => {
+						const user = getUserById(msg.sender.id)
+						const displayName = user?.username || `User_${msg.sender.id}`
+						const displayAvatar = user?.avatarUrl
+						return (
+							<div
+								key={msg.id}
+								className={cn(
+									'flex gap-3 group',
+									isOwnMessage(msg) ? 'flex-row-reverse' : 'flex-row',
+								)}
+							>
+								{/* Avatar Placeholder */}
 								<Avatar
-									fallback={msg.sender.username}
-									src={msg.sender.avatarUrl}
+									fallback={displayName}
+									src={displayAvatar || undefined}
 								/>
-							<div className="flex flex-col max-w-[70%]">
-								{/* Sender Name & Time */}
-								<div className="flex items-baseline gap-2 mb-1">
-									<span className="font-semibold text-white text-sm">
-										{msg.sender.username}
-									</span>
-									<span className="text-xs text-zinc-500">
-										{new Date(msg.createdAt).toLocaleTimeString([], {
-											hour: '2-digit',
-											minute: '2-digit',
-										})}
-									</span>
-								</div>
+								<div className="flex flex-col max-w-[70%]">
+									{/* Sender Name & Time */}
+									<div className="flex items-baseline gap-2 mb-1">
+										<span className="font-semibold text-white text-sm">
+											{displayName}
+										</span>
+										<span className="text-xs text-zinc-500">
+											{new Date(msg.createdAt).toLocaleTimeString([], {
+												hour: '2-digit',
+												minute: '2-digit',
+											})}
+										</span>
+									</div>
 
-								{/* Message Content */}
-								<div
-									className={cn(
-										'px-3 py-2 rounded-lg text-sm wrap-break-words whitespace-pre-wrap',
-										isOwnMessage(msg)
-											? 'bg-zinc-700 text-white rounded-tr-none'
-											: 'bg-zinc-800 text-zinc-100 rounded-tl-none',
-									)}
-								>
-									{msg.content}
+									{/* Message Content */}
+									<div
+										className={cn(
+											'px-3 py-2 rounded-lg text-sm wrap-break-words whitespace-pre-wrap',
+											isOwnMessage(msg)
+												? 'bg-zinc-700 text-white rounded-tr-none'
+												: 'bg-zinc-800 text-zinc-100 rounded-tl-none',
+										)}
+									>
+										{msg.content}
+									</div>
 								</div>
 							</div>
-						</div>
-					))
+						)
+					})
 				)}
 			</div>
 
@@ -107,7 +114,7 @@ export const ChannelTextChat = () => {
 					value={input}
 					onChange={e => setInput(e.target.value)}
 					sendDisabled={!input.trim()}
-          onKeyDown={handleKeyPress}
+					onKeyDown={handleKeyPress}
 					onSend={sendMessage}
 				/>
 			</div>

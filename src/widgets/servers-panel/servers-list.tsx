@@ -8,6 +8,7 @@ import {
 	useModal,
 } from '@shared/ui'
 import { AddServerMenu } from '@widgets/servers-panel'
+import { ServerMembersSync } from '@widgets/servers-panel/components/server-members-sync'
 import { useCallback } from 'react'
 
 export const ServersList = () => {
@@ -16,14 +17,14 @@ export const ServersList = () => {
 	const setSelectedServerId = useUiStore(state => state.setSelectedServerId)
 	const setSelectedChannelId = useUiStore(state => state.setSelectedChannelId)
 	const setMiddlePanel = useUiStore(state => state.setMiddlePanel)
-  const setMainPanel = useUiStore(state => state.setMainPanel)
-  const selectedServerId = useUiStore(state => state.selectedServerId)
+	const setMainPanel = useUiStore(state => state.setMainPanel)
+	const selectedServerId = useUiStore(state => state.selectedServerId)
 
 	const handleClickOnServer = useCallback(
 		(serverId: number) => {
 			setSelectedServerId(serverId)
 			setMiddlePanel('channels')
-      setMainPanel(null)
+			setMainPanel(null)
 		},
 		[setSelectedServerId, setMiddlePanel],
 	)
@@ -32,11 +33,13 @@ export const ServersList = () => {
 		setSelectedServerId(null)
 		setSelectedChannelId(null)
 		setMiddlePanel('friends')
-    setMainPanel(null)
+		setMainPanel(null)
 	}
 
 	return (
 		<>
+			<ServerMembersSync />
+
 			<div className="flex flex-col gap-2 p-1">
 				<ServerButton
 					style="home"
@@ -58,7 +61,7 @@ export const ServersList = () => {
 								hoverText={server.name}
 								serverLogoLink={server.iconUrl}
 								onClick={() => handleClickOnServer(server.id)}
-                isActive={server.id === selectedServerId}
+								isActive={server.id === selectedServerId}
 							/>
 						</div>
 					))}

@@ -1,4 +1,5 @@
 import { TServer } from '@entities/server/model'
+import { TUser } from '@entities/user/model'
 import { CreateServerData } from '@features/servers-bar/schemas'
 import { apiClient } from '@shared/api/axios-instance'
 
@@ -28,4 +29,11 @@ export const generateServerInvite = async (
 
 export const joinServerByInvite = async (inviteCode: string): Promise<void> => {
 	await apiClient.post('/servers/join', { inviteCode })
+}
+
+export const getServerMembers = async (serverId: number): Promise<TUser[]> => {
+	const response = await apiClient.get<{ data: TUser[] }>(
+		`/servers/${serverId}/members`,
+	)
+	return response.data.data
 }
