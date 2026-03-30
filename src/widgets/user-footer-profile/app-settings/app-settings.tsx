@@ -1,8 +1,9 @@
 import { useAuthStore } from '@entities/user/model'
 import { useGetProfile } from '@features/user'
-import { LockClosedIcon, UserIcon, XMarkIcon } from '@heroicons/react/16/solid'
+import { LockClosedIcon, SpeakerWaveIcon, UserIcon, XMarkIcon } from '@heroicons/react/16/solid'
 import { cn } from '@shared/lib'
 import { AppButton, Avatar, Divider } from '@shared/ui'
+import { DevicesSettings } from '@widgets/user-footer-profile/app-settings/settings-components/devices-settings'
 import { PersonalData } from '@widgets/user-footer-profile/app-settings/settings-components/personal-data'
 import { SecuritySettings } from '@widgets/user-footer-profile/app-settings/settings-components/security-settings'
 import { useState } from 'react'
@@ -25,6 +26,10 @@ export const AppSettings = ({ close }: Props) => {
 			title: 'Безопасность',
 			icon: <LockClosedIcon className="w-8 h-8" />,
 		},
+    {
+      title: 'Аудио и видео',
+      icon: <SpeakerWaveIcon className='w-8 h-8' />,
+    }
 	]
 
 	return (
@@ -70,9 +75,10 @@ export const AppSettings = ({ close }: Props) => {
 					</button>
 				</div>
 				<Divider />
-				<div className="flex-1 pl-1 pr-1 pb-1">
+				<div className="flex-1 pl-1 pr-1 pb-1 overflow-y-scroll">
 					{activeTab === 0 && <PersonalData />}
 					{activeTab === 1 && <SecuritySettings />}
+          {activeTab === 2 && <DevicesSettings />}
 				</div>
 			</div>
 		</div>

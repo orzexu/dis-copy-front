@@ -1,7 +1,9 @@
+import { VoiceChannel } from "@widgets/voice-channel"
+
 export const ChannelVoiceChat = () => {
   return (
     <div>
-      channel-voice-chat
+      <VoiceChannel  roomName="test" />
     </div>
   )
 }

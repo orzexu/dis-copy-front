@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, session } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -13,8 +13,19 @@ let win;
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
+    width: 1200,
+    height: 800,
     webPreferences: {
-      preload: path.join(__dirname$1, "preload.mjs")
+      preload: path.join(__dirname$1, "preload.mjs"),
+      nodeIntegration: false,
+      contextIsolation: true
+    }
+  });
+  session.defaultSession.setPermissionRequestHandler((webContents2, permission2, callback) => {
+    if (permission2 === "media" || permission2 === "display-capture" || permission2 === "window-management" || permission2 === "fullscreen") {
+      callback(true);
+    } else {
+      callback(false);
     }
   });
   win.webContents.on("did-finish-load", () => {
