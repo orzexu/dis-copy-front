@@ -1,0 +1,1 @@
+export { useRoomsStore } from './use-rooms-store'

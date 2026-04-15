@@ -19,3 +19,4 @@ export {
 	joinServerByInvite,
 	getUserServers,
 } from './server-api'
+export { livekitApi } from './livekit-api'

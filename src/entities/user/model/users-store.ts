@@ -13,6 +13,7 @@ type UsersStore = {
 	addUser: (user: TUser) => void
 	addUsers: (users: TUser[]) => void
 	getUserById: (id: number) => TUser | undefined
+	getUserByName: (username: string) => TUser | undefined
 }
 
 export const useUsersStore = create<UsersStore>((set, get) => ({
@@ -38,4 +39,6 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
 		}),
 
 	getUserById: id => get().users[id],
+
+	getUserByName: username => Object.values(get().users).find(user => user.username === username),
 }))

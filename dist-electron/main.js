@@ -22,7 +22,7 @@ function createWindow() {
     }
   });
   session.defaultSession.setPermissionRequestHandler((webContents2, permission2, callback) => {
-    if (permission2 === "media" || permission2 === "display-capture" || permission2 === "window-management" || permission2 === "fullscreen") {
+    if (permission2 === "media" || permission2 === "display-capture" || permission2 === "window-management") {
       callback(true);
     } else {
       callback(false);

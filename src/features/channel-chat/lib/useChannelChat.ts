@@ -20,7 +20,6 @@ export const useChannelChat = ({ channelId }: UseChannelChatProps) => {
 
   const chatMessages = getChannelMessages(channelId);
 
-  //  Авто-скролл вниз при новых сообщениях (опционально, можно вынести в компонент)
   useEffect(() => {
     const container = document.querySelector('.channel-chat-messages');
     if (container && historyLoaded) {
@@ -31,8 +30,6 @@ export const useChannelChat = ({ channelId }: UseChannelChatProps) => {
   //  Подключение и загрузка истории
   useEffect(() => {
     const loadHistory = async () => {
-      // Если сокет не подключен глобально (в useGlobalSocket), подключаем здесь.
-      // Но обычно он уже подключен глобально, поэтому isConnected станет true быстро.
       if (!serverChatService.isConnected()) {
         try {
           await serverChatService.connect();
@@ -45,10 +42,8 @@ export const useChannelChat = ({ channelId }: UseChannelChatProps) => {
         setIsConnected(true);
       }
 
-      // Запрашиваем историю для ЭТОГО канала
       serverChatService.getChannelHistory(channelId, 50);
 
-      // Обработчик получения истории
       const handleChannelHistory = (messages: TChannelMessage[]) => {
         setChannelMessages(channelId, messages);
         setHistoryLoaded(true);
@@ -66,7 +61,7 @@ export const useChannelChat = ({ channelId }: UseChannelChatProps) => {
     loadHistory();
   }, [channelId]);
 
-  // 🔥 Отправка сообщения
+  // Отправка сообщения
   const sendMessage = useCallback(() => {
     if (!input.trim() || !isConnected || !channelId) return;
 

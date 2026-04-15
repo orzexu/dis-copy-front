@@ -2,7 +2,7 @@ import { cn } from '@shared/lib'
 import { useEffect, useState } from 'react'
 
 type Props = {
-	src?: string
+	src?: string | null
 	alt?: string
 	fallback?: string
 	size?: 'sm' | 'md' | 'lg' | 'xl'

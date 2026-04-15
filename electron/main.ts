@@ -40,7 +40,7 @@ function createWindow() {
   })
 
   session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
-    if (permission === 'media' || permission === 'display-capture' || permission === 'window-management' || permission === 'fullscreen') {
+    if (permission === 'media' || permission === 'display-capture' || permission === 'window-management') {
       callback(true);
     } else {
       callback(false);

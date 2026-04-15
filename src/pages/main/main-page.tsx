@@ -56,52 +56,52 @@ export const MainPage = () => {
 		selectedChannelId !== null && mainPanel === 'channelVoiceChat'
 
 	return (
-		<div className="flex h-screen w-full p-1">
-			<div className="flex flex-col justify-between">
-				<div className="flex flex-1">
-					<div className="min-w-12 pr-0.5">
-						{/* SERVERS */}
-						<ServersList />
-					</div>
+			<div className="flex h-screen w-full p-1">
+				<div className="flex flex-col justify-between">
+					<div className="flex flex-1">
+						<div className="min-w-12 pr-0.5">
+							{/* SERVERS */}
+							<ServersList />
+						</div>
 
-					<Divider type="vertical" />
-					<div className="p-2 min-w-2xs flex flex-col justify-between relative">
-						{/* SEARCH USERS */}
-						<SearchUsersBar />
+						<Divider type="vertical" />
+						<div className="p-2 min-w-2xs flex flex-col justify-between relative">
+							{/* SEARCH USERS */}
+							<SearchUsersBar />
 
-						<Divider type="horizontal" />
+							<Divider type="horizontal" />
 
-						{/* MIDDLE PANEL */}
-						<div className="flex-1">
-							{showFriends ? (
-								<FriendsList />
-							) : (
-								showServerContent && <ServerContent />
-							)}
+							{/* MIDDLE PANEL */}
+							<div className="flex-1">
+								{showFriends ? (
+									<FriendsList />
+								) : (
+									showServerContent && <ServerContent />
+								)}
+							</div>
 						</div>
 					</div>
+
+					{/* FOOTER PROFILE + SETTINGS PANEL */}
+					<UserFooterProfile />
 				</div>
 
-				{/* FOOTER PROFILE + SETTINGS PANEL */}
-				<UserFooterProfile />
+				{/* MAIN PANEL */}
+				<div className="flex-1 pl-1">
+					{showFriendRequests ? (
+						<FriendRequestsList />
+					) : showChat ? (
+						<ChatWidget />
+					) : showChannelTextChat ? (
+						<ChannelTextChat />
+					) : showChannelVoiceChat ? (
+						<ChannelVoiceChat roomName={`channel_${selectedChannelId}`} />
+					) : (
+						<div className="h-full flex items-center justify-center text-zinc-500">
+							Select a friend to start chatting
+						</div>
+					)}
+				</div>
 			</div>
-
-			{/* MAIN PANEL */}
-			<div className="flex-1 pl-1">
-				{showFriendRequests ? (
-					<FriendRequestsList />
-				) : showChat ? (
-					<ChatWidget />
-				) : showChannelTextChat ? (
-					<ChannelTextChat />
-				) : showChannelVoiceChat ? (
-					<ChannelVoiceChat />
-				) : (
-					<div className="h-full flex items-center justify-center text-zinc-500">
-						Select a friend to start chatting
-					</div>
-				)}
-			</div>
-		</div>
 	)
 }
