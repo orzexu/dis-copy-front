@@ -28,15 +28,13 @@ export const ChannelsList = ({ server }: Props) => {
 	return (
 		<>
 			{server.channels.map(channel => (
-				<div>
+				<div key={channel.id}>
 					<div
-						key={channel.id}
 						className={cn(
 							'p-2 rounded cursor-pointer flex items-center',
 							'hover:bg-zinc-700 transition-colors',
 							selectedChannelId === channel.id &&
 								'bg-zinc-700/50 text-zinc-200',
-							channel.type === 'voice' && 'py-4',
 						)}
 						onClick={() => handleClickOnChannel(channel.id, channel.type)}
 					>
