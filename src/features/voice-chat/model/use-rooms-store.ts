@@ -14,6 +14,7 @@ type RoomsStore = {
   setParticipants: (roomName: string, participants: LiveKitParticipant[]) => void
   setLoading: (roomName: string, isLoading: boolean) => void
   setCurrentRoom: (roomName: string | null) => void
+  removeParticipant: (roomName: string, identity: string) => void
   
   getParticipants: (roomName: string) => LiveKitParticipant[]
   getParticipantsCount: (roomName: string) => number
@@ -49,6 +50,22 @@ export const useRoomsStore = create<RoomsStore>((set, get) => ({
   },
   
   setCurrentRoom: (roomName) => set({ currentRoom: roomName }),
+
+  removeParticipant: (roomName, identity) => {
+    set((state) => {
+      const newRooms = new Map(state.rooms)
+      const roomInfo = newRooms.get(roomName)
+      if (roomInfo) {
+        const updatedParticipants = roomInfo.participants.filter(p => p.identity !== identity)
+        newRooms.set(roomName, {
+          ...roomInfo,
+          participants: updatedParticipants,
+          lastFetched: Date.now(),
+        })
+      }
+      return { rooms: newRooms }
+    })
+  },
   
   getParticipants: (roomName) => {
     return get().rooms.get(roomName)?.participants || []

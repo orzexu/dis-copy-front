@@ -4,12 +4,15 @@ import { LiveKitRoom, RoomAudioRenderer, useRemoteParticipants, useLocalParticip
 import { apiClient } from '@shared/api'
 import { useEffect, useState } from 'react'
 import { useRoomsStore } from '@features/voice-chat/model'
+import { VoiceChatControls } from '@widgets/channel-voice-chat/components/voice-chat-controls'
+import { ParticipantsList } from '@widgets/channel-voice-chat/components/participants-list'
 
 type Props = {
   roomName: string
+  onLeave: () => void
 }
 
-export const ChannelVoiceChat = ({ roomName }: Props) => {
+export const ChannelVoiceChat = ({ roomName, onLeave }: Props) => {
   const user = useAuthStore(s => s.user)
   const accessToken = useAuthStore(s => s.accessToken)
   const { microphoneId } = useDevicesSettingsStore()
@@ -49,8 +52,12 @@ export const ChannelVoiceChat = ({ roomName }: Props) => {
     >
       <RoomParticipantsObserver roomName={roomName} />
       <RoomAudioRenderer />
+      {/* ------------------- */}
       <div className="flex-1 p-4">
         <ParticipantsList />
+      </div>
+      <div className='mt-auto p-4 flex justify-center'>
+        <VoiceChatControls onLeave={onLeave} />
       </div>
     </LiveKitRoom>
   )
@@ -71,21 +78,4 @@ const RoomParticipantsObserver = ({ roomName }: { roomName: string }) => {
   }, [remoteParticipants, localParticipant, roomName, setParticipants])
 
   return null
-}
-
-const ParticipantsList = () => {
-  const remoteParticipants = useRemoteParticipants()
-  const { localParticipant } = useLocalParticipant()
-  return (
-    <div className="space-y-2">
-      {localParticipant && (
-        <div className="text-white">Вы ({localParticipant.name || localParticipant.identity})</div>
-      )}
-      {remoteParticipants.map(p => (
-        <div key={p.identity} className="text-white">
-          {p.name || p.identity}
-        </div>
-      ))}
-    </div>
-  )
 }

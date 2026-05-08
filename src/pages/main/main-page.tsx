@@ -12,9 +12,13 @@ import { UserFooterProfile } from '@widgets/user-footer-profile'
 import { useCallback, useEffect } from 'react'
 import { ChannelTextChat } from '@widgets/channel-text-chat'
 import { ChannelVoiceChat } from '@widgets/channel-voice-chat'
+import { useRoomsStore } from '@features/voice-chat/model'
+import { useAuthStore } from '@entities/user/model'
 
 export const MainPage = () => {
 	useGlobalSocket()
+
+	const user = useAuthStore(state => state.user)
 
 	const selectedFriendId = useFriendsStore(state => state.selectedFriendId)
 	const setSelectedFriendId = useFriendsStore(
@@ -27,6 +31,9 @@ export const MainPage = () => {
 
 	const selectedServerId = useUiStore(state => state.selectedServerId)
 	const selectedChannelId = useUiStore(state => state.selectedChannelId)
+	const setSelectedChannelId = useUiStore(state => state.setSelectedChannelId)
+
+	const removeParticipant = useRoomsStore(state => state.removeParticipant)
 
 	const handleClearMainPanel = useCallback(
 		(e: KeyboardEvent) => {
@@ -37,6 +44,14 @@ export const MainPage = () => {
 		},
 		[setMainPanel, setSelectedFriendId],
 	)
+
+	const handleLeaveFromVoiceChannel = () => {
+		setMainPanel(null)
+		setSelectedChannelId(null)
+		if (selectedChannelId && user) {
+			removeParticipant(`channel_${selectedChannelId}`, user.id.toString())
+		}
+	}
 
 	useEffect(() => {
 		document.addEventListener('keydown', handleClearMainPanel)
@@ -56,52 +71,55 @@ export const MainPage = () => {
 		selectedChannelId !== null && mainPanel === 'channelVoiceChat'
 
 	return (
-			<div className="flex h-screen w-full p-1">
-				<div className="flex flex-col justify-between">
-					<div className="flex flex-1">
-						<div className="min-w-12 pr-0.5">
-							{/* SERVERS */}
-							<ServersList />
-						</div>
-
-						<Divider type="vertical" />
-						<div className="p-2 min-w-2xs flex flex-col justify-between relative">
-							{/* SEARCH USERS */}
-							<SearchUsersBar />
-
-							<Divider type="horizontal" />
-
-							{/* MIDDLE PANEL */}
-							<div className="flex-1">
-								{showFriends ? (
-									<FriendsList />
-								) : (
-									showServerContent && <ServerContent />
-								)}
-							</div>
-						</div>
+		<div className="flex h-screen w-full p-1">
+			<div className="flex flex-col justify-between">
+				<div className="flex flex-1">
+					<div className="min-w-12 pr-0.5">
+						{/* SERVERS */}
+						<ServersList />
 					</div>
 
-					{/* FOOTER PROFILE + SETTINGS PANEL */}
-					<UserFooterProfile />
+					<Divider type="vertical" />
+					<div className="p-2 min-w-2xs flex flex-col justify-between relative">
+						{/* SEARCH USERS */}
+						<SearchUsersBar />
+
+						<Divider type="horizontal" />
+
+						{/* MIDDLE PANEL */}
+						<div className="flex-1">
+							{showFriends ? (
+								<FriendsList />
+							) : (
+								showServerContent && <ServerContent />
+							)}
+						</div>
+					</div>
 				</div>
 
-				{/* MAIN PANEL */}
-				<div className="flex-1 pl-1">
-					{showFriendRequests ? (
-						<FriendRequestsList />
-					) : showChat ? (
-						<ChatWidget />
-					) : showChannelTextChat ? (
-						<ChannelTextChat />
-					) : showChannelVoiceChat ? (
-						<ChannelVoiceChat roomName={`channel_${selectedChannelId}`} />
-					) : (
-						<div className="h-full flex items-center justify-center text-zinc-500">
-							Select a friend to start chatting
-						</div>
-					)}
-				</div>
+				{/* FOOTER PROFILE + SETTINGS PANEL */}
+				<UserFooterProfile />
 			</div>
+
+			{/* MAIN PANEL */}
+			<div className="flex-1 pl-1">
+				{showFriendRequests ? (
+					<FriendRequestsList />
+				) : showChat ? (
+					<ChatWidget />
+				) : showChannelTextChat ? (
+					<ChannelTextChat />
+				) : showChannelVoiceChat ? (
+					<ChannelVoiceChat
+						roomName={`channel_${selectedChannelId}`}
+						onLeave={handleLeaveFromVoiceChannel}
+					/>
+				) : (
+					<div className="h-full flex items-center justify-center text-zinc-500">
+						Select a friend to start chatting
+					</div>
+				)}
+			</div>
+		</div>
 	)
 }
