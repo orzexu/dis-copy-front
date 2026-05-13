@@ -100,6 +100,7 @@ export const MainPage = () => {
 				{/* FOOTER PROFILE + SETTINGS PANEL */}
 				<UserFooterProfile />
 			</div>
+      <Divider type="vertical" />
 
 			{/* MAIN PANEL */}
 			<div className="flex-1 pl-1">

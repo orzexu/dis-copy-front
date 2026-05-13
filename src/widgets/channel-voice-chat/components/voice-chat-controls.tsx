@@ -91,7 +91,7 @@ export const VoiceChatControls = ({ onLeave }: Props) => {
 			</div>
 			<button
 				onClick={handleLeave}
-				className="px-4 py-2 rounded-full bg-red-500"
+				className={cn("px-4 py-2 rounded-full bg-red-500 hover:bg-red-500/50")}
 			>
 				<ArrowLeftEndOnRectangleIcon className="w-8 h-8" />
 			</button>
