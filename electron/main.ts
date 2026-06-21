@@ -1,4 +1,4 @@
-import { app, BrowserWindow, session, webContents } from 'electron'
+import { app, BrowserWindow, desktopCapturer, ipcMain, session, webContents } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -40,11 +40,27 @@ function createWindow() {
   })
 
   session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
-    if (permission === 'media' || permission === 'display-capture' || permission === 'window-management') {
+    if (permission === 'media' || permission === 'display-capture' || permission === 'window-management' || permission === 'fullscreen') {
       callback(true);
     } else {
       callback(false);
     }
+  })
+
+  ipcMain.handle('getScreenSources', async () => {
+    const sources = await desktopCapturer.getSources({
+      types: ['window', 'screen'],
+      thumbnailSize: { width: 800, height: 600 },
+      fetchWindowIcons: true,
+    })
+
+    return sources.map((source) => ({
+      id: source.id,
+      name: source.name,
+      thumbnail: source.thumbnail.toDataURL(),
+      displayId: source.display_id,
+      appIcon: source.appIcon?.toDataURL(),
+    }))
   })
 
   // Test active push message to Renderer-process.

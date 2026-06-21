@@ -1,4 +1,4 @@
-import { app, BrowserWindow, session } from "electron";
+import { app, BrowserWindow, session, ipcMain, desktopCapturer } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -22,11 +22,28 @@ function createWindow() {
     }
   });
   session.defaultSession.setPermissionRequestHandler((webContents2, permission2, callback) => {
-    if (permission2 === "media" || permission2 === "display-capture" || permission2 === "window-management") {
+    if (permission2 === "media" || permission2 === "display-capture" || permission2 === "window-management" || permission2 === "fullscreen") {
       callback(true);
     } else {
       callback(false);
     }
+  });
+  ipcMain.handle("getScreenSources", async () => {
+    const sources = await desktopCapturer.getSources({
+      types: ["window", "screen"],
+      thumbnailSize: { width: 800, height: 600 },
+      fetchWindowIcons: true
+    });
+    return sources.map((source) => {
+      var _a;
+      return {
+        id: source.id,
+        name: source.name,
+        thumbnail: source.thumbnail.toDataURL(),
+        displayId: source.display_id,
+        appIcon: (_a = source.appIcon) == null ? void 0 : _a.toDataURL()
+      };
+    });
   });
   win.webContents.on("did-finish-load", () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
