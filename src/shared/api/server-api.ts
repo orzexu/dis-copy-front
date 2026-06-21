@@ -3,6 +3,11 @@ import { TUser } from '@entities/user/model'
 import { CreateServerData } from '@features/servers-bar/schemas'
 import { apiClient } from '@shared/api/axios-instance'
 
+type TPatchServerResponse = {
+  name?: string
+  iconUrl?: string
+}
+
 export const getUserServers = async (): Promise<TServer[]> => {
 	const response = await apiClient.get<{ data: TServer[] }>(
 		'/servers/user-servers',
@@ -36,4 +41,15 @@ export const getServerMembers = async (serverId: number): Promise<TUser[]> => {
 		`/servers/${serverId}/members`,
 	)
 	return response.data.data
+}
+
+export const updateServer = async ({
+	serverId,
+	data,
+}: {
+	serverId: number
+	data: { name?: string; iconUrl?: string }
+}): Promise<TPatchServerResponse> => {
+  const response = await apiClient.patch(`/servers/${serverId}`, data)
+  return response.data.data
 }

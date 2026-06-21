@@ -18,5 +18,7 @@ export {
 	generateServerInvite,
 	joinServerByInvite,
 	getUserServers,
+  getServerMembers,
+  updateServer,
 } from './server-api'
 export { livekitApi } from './livekit-api'

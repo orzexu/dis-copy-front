@@ -5,7 +5,7 @@ type Props = {
 	src?: string | null
 	alt?: string
 	fallback?: string
-	size?: 'sm' | 'md' | 'lg' | 'xl'
+	size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
 	className?: string
 	isOnline?: boolean
 }
@@ -31,6 +31,7 @@ export const Avatar = ({
 		md: 'w-10 h-10',
 		lg: 'w-12 h-12',
 		xl: 'w-16 h-16',
+    xxl: 'w-32 h-32',
 	}
 
 	const textSizes = {
@@ -38,6 +39,7 @@ export const Avatar = ({
 		md: 'text-sm',
 		lg: 'text-base',
 		xl: 'text-lg',
+    xxl: 'text-2xl',
 	}
 
 	const showFallback = !src || imageError

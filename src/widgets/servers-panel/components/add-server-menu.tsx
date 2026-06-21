@@ -1,6 +1,6 @@
 import { AppButton } from '@shared/ui'
 import { BackButton } from '@widgets/servers-panel/components/back-button'
-import { CreateServerFrom } from '@widgets/servers-panel/components/create-server-from'
+import { CreateServerForm } from '@widgets/servers-panel/components/create-server-form'
 import { JoinToServer } from '@widgets/servers-panel/components/join-to-server'
 import { useState } from 'react'
 
@@ -41,7 +41,7 @@ export const AddServerMenu = () => {
 			{whatStep === 'create' && (
 				<>
 					<BackButton onClick={() => handleChangeStep('null')} />
-					<CreateServerFrom />
+					<CreateServerForm />
 				</>
 			)}
 
